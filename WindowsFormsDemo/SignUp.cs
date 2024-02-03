@@ -55,8 +55,8 @@ namespace WindowsFormsDemo
                 SqlCommand cmdInsert = new SqlCommand("INSERT INTO UserInfo VALUES (@name, @address, @phoneNumber, @gender, @username, @password)", conn);
                 cmdInsert.Parameters.AddWithValue("@name", txtName.Text);
                 cmdInsert.Parameters.AddWithValue("@address", txtAddress.Text);
-                cmdInsert.Parameters.AddWithValue("@phoneNumber", txtPhoneNumber.Text); // Correct parameter name
-                cmdInsert.Parameters.AddWithValue("@gender", rbMale.Checked ? "Male" : "Female"); // Simplified gender assignment
+                cmdInsert.Parameters.AddWithValue("@phoneNumber", txtPhoneNumber.Text); 
+                cmdInsert.Parameters.AddWithValue("@gender", rbMale.Checked ? "Male" : "Female"); 
                 cmdInsert.Parameters.AddWithValue("@username", txtUsername.Text);
                 cmdInsert.Parameters.AddWithValue("@password", txtPassword.Text);
 
@@ -93,6 +93,7 @@ namespace WindowsFormsDemo
             
         }
 
+      
         private bool AllFieldsFilled()
         {
             List<TextBox> requiredFields = new List<TextBox> { txtName, txtAddress, txtPhoneNumber, txtUsername, txtPassword, txtConfirmPassword };

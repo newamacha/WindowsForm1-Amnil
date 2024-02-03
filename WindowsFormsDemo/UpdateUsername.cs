@@ -39,12 +39,36 @@ namespace WindowsFormsDemo
         {
             try
             {
+
                 conn.Open();
+                
+                if(!UsernamePasswordMatches(txtCurrentUsername.Text, txtPassword.Text)) 
+                {
+                    throw new ArgumentException("Username and Password mismatch. Please enter correct values.");
+                }
+
+                if (string.IsNullOrWhiteSpace(txtNewUsername.Text))
+                {
+                    throw new ArgumentException("Please enter new Username.");
+                }
+
 
                 SqlCommand cmd = new SqlCommand("UPDATE UserInfo SET username=@username WHERE id=@id", conn);
                 cmd.Parameters.AddWithValue("@username", txtNewUsername.Text);
 
+                SqlCommand cmd2 = new SqlCommand("SELECT id FROM UserInfo WHERE username=@username", conn);
+                cmd2.Parameters.AddWithValue("@username", txtCurrentUsername.Text);
 
+                int cmd2id = (int)cmd2.ExecuteScalar();
+                cmd.Parameters.AddWithValue("@id", cmd2id);
+
+                cmd.ExecuteNonQuery();
+
+                MessageBox.Show("Username Updated Successfully...");
+
+                this.Hide();
+                LoggedIn loggedIn = new LoggedIn();
+                loggedIn.Show();
             }
             catch(Exception ex) 
             {
@@ -56,8 +80,15 @@ namespace WindowsFormsDemo
             }
         }
 
+        private bool UsernamePasswordMatches(string currentUsername, string password)
+        {
+            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM UserInfo WHERE username=@username AND password=@password", conn);
+            cmd.Parameters.AddWithValue("@username", currentUsername);
+            cmd.Parameters.AddWithValue ("@password", password);
 
-
+            int count = (int)cmd.ExecuteScalar();
+            return count != 0;
+        }
 
         private void UpdateUsername_Load(object sender, EventArgs e)
         {
